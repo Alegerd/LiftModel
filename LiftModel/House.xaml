@@ -1,0 +1,19 @@
+﻿<UserControl x:Name="house" x:Class="LiftModel.House"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LiftModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000"
+             Width="1000" Height="800">
+    <Grid x:Name="houseGrid">
+        <Image x:Name="house_png" Source="house.png" Stretch="Fill" Grid.ColumnSpan="2"/>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel x:Name="liftPlace">
+            </StackPanel>
+
+            <StackPanel x:Name="sp"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
