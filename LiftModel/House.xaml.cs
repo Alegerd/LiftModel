@@ -33,6 +33,10 @@ namespace LiftModel
             Margin = thickness;
             CreateLift();
             CreateFloors();
+            foreach (var floor in Floors)
+            {
+                floor.CallLift += lift.AcceptCall;
+            }
         }
 
         private void CreateLift()

@@ -8,25 +8,11 @@
              d:DesignHeight="100" d:DesignWidth="800"
              Height="100" Width="800" >
 
-    <Grid x:Name="floorGrid" MouseDown="floor_MouseDown">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="67*"/>
-            <RowDefinition Height="22"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="Column_1" Width="80"/>
-            <ColumnDefinition x:Name="Column_2" Width="80"/>
-            <ColumnDefinition x:Name="Column_3" Width="80"/>
-            <ColumnDefinition x:Name="Column_4" Width="80"/>
-            <ColumnDefinition x:Name="Column_5" Width="80"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="80"/>
-        </Grid.ColumnDefinitions>
-        <Rectangle Fill="#FF636363" HorizontalAlignment="Left" Height="22" Margin="0,2,0,-2" Stroke="Black" VerticalAlignment="Top" Width="800" Grid.ColumnSpan="10" Grid.Row="2"/>
+    <Grid x:Name="floorGrid">
+        <Canvas x:Name="floorCanvas">
+            
+        </Canvas>
+        <Rectangle Fill="#FF636363" HorizontalAlignment="Left" Height="22" Margin="0,78,0,0" Stroke="Black" VerticalAlignment="Top" Width="800" />
 
     </Grid>
 </UserControl>

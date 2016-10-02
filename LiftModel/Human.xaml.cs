@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Windows.Media.Animation;
 
 namespace LiftModel
 {
@@ -22,18 +23,25 @@ namespace LiftModel
     public partial class Human : UserControl
     {
         int Floor { get; set; }
+        public int Number { get; set; }
+        public int waitingNumber{ get; set; } 
         DispatcherTimer timer = new DispatcherTimer();
 
         public delegate void MethodContainer(Human human);
         public event MethodContainer moveToWaiting;
 
-        public Human(int floor)
+        public Human(int floor, int number)
         {
             InitializeComponent();
+            Number = number;
             Floor = floor;
             timer.Tick += timer_Tick;
-            timer.Interval = TimeSpan.FromSeconds(Tools.rnd.Next(2,30));
+            timer.Interval = TimeSpan.FromSeconds(Tools.rnd.Next(2, 30));
             timer.Start();
+        }
+        public int ChooseFloor()
+        {
+            return Tools.rnd.Next(1, 9);
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -41,6 +49,15 @@ namespace LiftModel
             timer.Stop();
             human_png.Source = new BitmapImage(new Uri("E:/Programming/C#/LiftModel/LiftModel/redHuman.png"));
             moveToWaiting(this);
+        }
+
+        public void MoveHuman(Thickness newThickness)
+        {
+            ThicknessAnimation peopleAnim = new ThicknessAnimation();
+            peopleAnim.From = Margin;
+            peopleAnim.Duration = TimeSpan.FromSeconds(2);
+            peopleAnim.To = newThickness;
+            BeginAnimation(MarginProperty, peopleAnim);
         }
     }
 }

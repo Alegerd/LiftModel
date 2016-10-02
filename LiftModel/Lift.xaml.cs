@@ -21,8 +21,11 @@ namespace LiftModel
     /// </summary>
     public partial class Lift : UserControl
     {
-        double HouseHeight { get; set; }
-        int currentFlorNum { get; set; }
+        private double HouseHeight { get; set; }
+        private int currentFloorNum { get; set; }
+        private List<Human> PeopleInLift = new List<Human>(5);
+        private List<Floor> CallingFloors = new List<Floor>();
+        private List<int> FloorsPeopleWant = new List<int>();
 
         public Lift(double houseHeight)
         {
@@ -31,17 +34,48 @@ namespace LiftModel
             thic.Top = houseHeight - Height;
             Margin = thic;
             HouseHeight = houseHeight;
+
         }
 
-        public void Move(int floor)
+        private void Move(Floor floor)
         {
             ThicknessAnimation liftanim = new ThicknessAnimation();
             liftanim.From = Margin;
-            liftanim.Duration = TimeSpan.FromSeconds(Math.Abs(0.3*(floor-currentFlorNum)));
-            liftanim.To = new Thickness(0,HouseHeight - (Height * (9-floor)),0,0);
-            BeginAnimation(MarginProperty,liftanim);
-            currentFlorNum = floor;
-            
+            liftanim.Duration = TimeSpan.FromSeconds(Math.Abs(0.3 * (floor.Number - currentFloorNum)));
+            liftanim.To = new Thickness(0, HouseHeight - (Height * (9 - floor.Number)), 0, 0);
+            liftanim.Completed += TakePeople;
+            BeginAnimation(MarginProperty, liftanim);
+            currentFloorNum = floor.Number;
+        }
+        private void TakePeople(object sender, EventArgs e)
+        {
+            foreach (Human waitingHuman in CallingFloors[0].WaitingPeople)
+            {
+                if(PeopleInLift.Count != PeopleInLift.Capacity)
+                {
+                    PeopleInLift.Add(waitingHuman);
+                    //CallingFloors[0].WaitingPeople.Remove(waitingHuman);
+                    CallingFloors[0].MoveHumansInLift(waitingHuman);
+
+                    int floorHumanWant = waitingHuman.ChooseFloor();
+                    if (!FloorsPeopleWant.Contains(floorHumanWant))
+                    {
+                        FloorsPeopleWant.Add(floorHumanWant);
+                        Grid.SetColumn(waitingHuman, waitingHuman.waitingNumber);
+                        liftGrid.Children.Add(waitingHuman);
+                    }
+                }
+            }
+        }
+
+        public void AcceptCall(Floor floor)
+        {
+            CallingFloors.Add(floor);
+            ChooseFloorToMove(floor);
+        }
+        private void ChooseFloorToMove(Floor floor)
+        {
+            if (floor == CallingFloors[0]) Move(floor);
         }
     }
 }

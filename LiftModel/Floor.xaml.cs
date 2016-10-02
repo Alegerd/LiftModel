@@ -21,13 +21,14 @@ namespace LiftModel
     /// </summary>
     public partial class Floor : UserControl
     {
-        private int Number {get; set;}
+        public int Number {get; set;}
+        private bool LiftIsCalled { get; set; }
         private Lift Lift { get; set;}
         public List<Human> People = new List<Human>();
-        public Queue<Human> WaitingPeople = new Queue<Human>();
+        public List<Human> WaitingPeople = new List<Human>();
 
-        public delegate void MethodContainer(Human human);
-        public event MethodContainer moveToWaiting;
+        public delegate void LiftCallingDel(Floor floor);
+        public event LiftCallingDel CallLift; 
 
         public Floor(int number, Lift lift)
         {
@@ -35,38 +36,34 @@ namespace LiftModel
             Number = number;
             Lift = lift;
 
-            int numberOfPeople = Tools.rnd.Next(1,7);
+            int numberOfPeople = Tools.rnd.Next(1,6);
             for (int i = 0; i < numberOfPeople; i++)
             {
-                Human newHuman = new Human(Number);
+                Human newHuman = new Human(Number, i+1);
                 newHuman.moveToWaiting += AddToWaiting;
                 People.Add(newHuman);
-                Grid.SetRow(newHuman, 1);
-                Grid.SetColumn(newHuman, (10-i));
-                floorGrid.Children.Add(newHuman);
+                Canvas.SetRight(newHuman, i*60);
+                Canvas.SetBottom(newHuman,21);
+                floorCanvas.Children.Add(newHuman);
             }
         }
+
         public void AddToWaiting(Human human)
         {
+            if (!LiftIsCalled) CallLift(this);
+            LiftIsCalled = true;
+            WaitingPeople.Add(human);
+            human.waitingNumber = WaitingPeople.Count();
+            //double dx = (400-(human.waitingNumber * 80) + (5 - human.Number)*80)-80;
             People.Remove(human);
-            WaitingPeople.Enqueue(human);
-            MoveHumanToWaitingArea(human);
+            Thickness newThickness = new Thickness();
+            newThickness.Right = 500;
+            human.MoveHuman(newThickness);
         }
-
-        private void MoveHumanToWaitingArea(Human human)
+        public void MoveHumansInLift(Human human)
         {
-            ThicknessAnimation peopleAnim = new ThicknessAnimation();
-            peopleAnim.From = human.Margin;
-            peopleAnim.Duration = TimeSpan.FromSeconds(2);
-            peopleAnim.To = new Thickness(-500, 0, 0, 0);
-            BeginAnimation(MarginProperty, peopleAnim);
-
-            //Grid.SetColumn(human, WaitingPeople.ToList().IndexOf(human));
+            floorCanvas.Children.Remove(human);
         }
 
-        private void floor_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Lift.Move(Number);
-        }
     }
 }
