@@ -9,6 +9,7 @@
              Visibility="Visible">
     <Grid>
         <Image x:Name="human_png" Height="67" Width="40" Stretch="Fill" Source="E:\Programming\C#\LiftModel\LiftModel\human.png"/>
+        <Label x:Name="label" Content="0" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" Foreground="White"/>
         <!--"<Image x:Name="redHuman_png" Height="67" Width="60" Stretch="Fill" Source="E:\Programming\C#\LiftModel\LiftModel\redHuman.png" Visibility="Hidden" Panel.ZIndex="10"/>-->
     </Grid>
 </UserControl>

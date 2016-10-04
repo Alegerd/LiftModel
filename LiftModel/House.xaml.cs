@@ -31,28 +31,28 @@ namespace LiftModel
         {  
             InitializeComponent();
             Margin = thickness;
-            CreateLift();
             CreateFloors();
+            CreateLift();
             foreach (var floor in Floors)
             {
                 floor.CallLift += lift.AcceptCall;
             }
         }
 
-        private void CreateLift()
-        {
-            lift = new Lift(Height);
-            Canvas.SetBottom(lift,200);
-            liftPlace.Children.Add(lift);
-        }
         private void CreateFloors()
         {
             for (int i = 0; i < 8; i++)
             {
-                Floor floor = new Floor(i+1,lift);
+                Floor floor = new Floor(i+1);
                 sp.Children.Add(floor);
                 Floors.Add(floor);
             }
+        }
+        private void CreateLift()
+        {
+            lift = new Lift(Height, Floors);
+            Canvas.SetBottom(lift,200);
+            liftPlace.Children.Add(lift);
         }
 
     }

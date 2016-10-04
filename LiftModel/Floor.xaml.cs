@@ -22,43 +22,45 @@ namespace LiftModel
     public partial class Floor : UserControl
     {
         public int Number {get; set;}
-        private bool LiftIsCalled { get; set; }
-        private Lift Lift { get; set;}
+        public bool LiftIsCalled { get; set; }
         public List<Human> People = new List<Human>();
         public List<Human> WaitingPeople = new List<Human>();
 
         public delegate void LiftCallingDel(Floor floor);
         public event LiftCallingDel CallLift; 
 
-        public Floor(int number, Lift lift)
+        public Floor(int number)
         {
             InitializeComponent();
             Number = number;
-            Lift = lift;
 
             int numberOfPeople = Tools.rnd.Next(1,6);
             for (int i = 0; i < numberOfPeople; i++)
             {
                 Human newHuman = new Human(Number, i+1);
                 newHuman.moveToWaiting += AddToWaiting;
+                newHuman.humanCame += CallingLift;
                 People.Add(newHuman);
                 Canvas.SetRight(newHuman, i*60);
                 Canvas.SetBottom(newHuman,21);
                 floorCanvas.Children.Add(newHuman);
+
             }
         }
 
         public void AddToWaiting(Human human)
         {
-            if (!LiftIsCalled) CallLift(this);
-            LiftIsCalled = true;
             WaitingPeople.Add(human);
             human.waitingNumber = WaitingPeople.Count();
-            //double dx = (400-(human.waitingNumber * 80) + (5 - human.Number)*80)-80;
             People.Remove(human);
             Thickness newThickness = new Thickness();
             newThickness.Right = 500;
             human.MoveHuman(newThickness);
+        }
+        private void CallingLift()
+        {
+            if (!LiftIsCalled) CallLift(this);
+            LiftIsCalled = true;
         }
         public void MoveHumansInLift(Human human)
         {
