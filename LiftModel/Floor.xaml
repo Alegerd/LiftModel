@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LiftModel"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="800"
-             Height="100" Width="800" >
+             d:DesignHeight="100" d:DesignWidth="600"
+             Height="100" Width="600" >
 
     <Grid x:Name="floorGrid">
         <Canvas x:Name="floorCanvas">
-            
+
         </Canvas>
-        <Rectangle Fill="#FF636363" HorizontalAlignment="Left" Height="22" Margin="0,78,0,0" Stroke="Black" VerticalAlignment="Top" Width="800" />
+        <Rectangle Fill="#FF636363" HorizontalAlignment="Left" Margin="0,78,0,0" Stroke="Black" Width="600" />
 
     </Grid>
 </UserControl>

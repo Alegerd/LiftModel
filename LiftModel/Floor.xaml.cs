@@ -41,7 +41,7 @@ namespace LiftModel
                 newHuman.moveToWaiting += AddToWaiting;
                 newHuman.humanCame += CallingLift;
                 People.Add(newHuman);
-                Canvas.SetRight(newHuman, i*60);
+                Canvas.SetRight(newHuman, (i*40)+200);
                 Canvas.SetBottom(newHuman,21);
                 floorCanvas.Children.Add(newHuman);
 
@@ -53,9 +53,9 @@ namespace LiftModel
             WaitingPeople.Add(human);
             human.waitingNumber = WaitingPeople.Count();
             People.Remove(human);
-            Thickness newThickness = new Thickness();
-            newThickness.Right = 500;
-            human.MoveHuman(newThickness);
+            //Thickness newThickness = new Thickness();
+            //newThickness.Right = 500;
+            human.MoveHuman(-1);
         }
         private void CallingLift()
         {

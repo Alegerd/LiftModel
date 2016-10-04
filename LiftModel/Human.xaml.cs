@@ -27,7 +27,10 @@ namespace LiftModel
         //public Thickness InstantMargin { get; set; }
         public int waitingNumber{ get; set; } 
         public int FloorHumanWants { get; set; }
-        DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer animationTimer = new DispatcherTimer();
+        private double Distanation { get; set; }
+        private int AnimKurs { get; set; }
 
         public delegate void MethodContainer(Human human);
         public delegate void HumanCameDel();
@@ -44,6 +47,8 @@ namespace LiftModel
             Floor = floor;
             timer.Tick += timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(Tools.rnd.Next(2, 60));
+            animationTimer.Tick += AnimationTimer_Tick;
+            animationTimer.Interval = TimeSpan.FromMilliseconds(1);
             timer.Start();
         }
 
@@ -62,10 +67,12 @@ namespace LiftModel
             label.Content = FloorHumanWants;
             return FloorHumanWants;
         }
-        public void CameToNeededFloor()
+        public void CameToNeededFloor(List<Human> PeopleOnFloor)
         {
+            Margin = new Thickness(0, 0, 0, 0);
             human_png.Source = new BitmapImage(new Uri("E:/Programming/C#/LiftModel/LiftModel/human.png"));
-            waitingNumber = 0;
+            waitingNumber = 1;
+            MoveHumanToFloor(PeopleOnFloor);
             //Margin = InstantMargin;
         }
 
@@ -77,20 +84,50 @@ namespace LiftModel
             moveToWaiting(this);
         }
 
-        public void MoveHuman(Thickness newThickness)
+        public void MoveHuman(int AnimKurs)
         {
-            ThicknessAnimation peopleAnim = new ThicknessAnimation();
-            peopleAnim.From = Margin;
-            peopleAnim.Duration = TimeSpan.FromSeconds(2);
-            peopleAnim.To = newThickness;
-            peopleAnim.Completed += HumanCame;
-            BeginAnimation(MarginProperty, peopleAnim);
-            
+            //ThicknessAnimation peopleAnim = new ThicknessAnimation();
+            //peopleAnim.From = Margin;
+            //peopleAnim.Duration = TimeSpan.FromSeconds(2);
+            //peopleAnim.To = newThickness;
+            //peopleAnim.Completed += HumanCame;
+            //BeginAnimation(MarginProperty, peopleAnim);
+            this.AnimKurs = -1;
+            Distanation = Math.Abs(400 - ((waitingNumber - 1) * 40) - (Number * 40))*2;
+            animationTimer.Start();
+        }
+
+        private void MoveHumanToFloor(List<Human> PeopleOnFloor)
+        {
+            //ThicknessAnimation peopleAnim = new ThicknessAnimation();
+            //peopleAnim.From = Margin;
+            //peopleAnim.Duration = TimeSpan.FromSeconds(2);
+            //peopleAnim.To = newThickness;
+            //peopleAnim.Completed += HumanCame;
+            //BeginAnimation(MarginProperty, peopleAnim);
+            this.AnimKurs = 1;
+            Distanation = Math.Abs(600 - 40);
+            animationTimer.Start();
         }
 
         private void HumanCame(object sender, EventArgs e)
         {
             humanCame();
+        }
+
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            if (Distanation == 0)
+            {
+                animationTimer.Stop();
+                HumanCame(null, null);
+            }
+            else
+            {
+                Distanation -= 5;
+                Margin = new Thickness(Margin.Left + (AnimKurs * 5), 0, 0, 0);
+            }
+
         }
     }
 }

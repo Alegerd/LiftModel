@@ -120,6 +120,7 @@ namespace LiftModel
                 {
                     PeopleInLift.Add(waitingHuman);
                     currentFloor.MoveHumansInLift(waitingHuman);
+                    waitingHuman.Margin = new Thickness(0, 0, 0, 0);
 
                     Canvas.SetLeft(waitingHuman, 40 * (PeopleInLift.Count - 1));//помещаем человека в лифт
                     Canvas.SetBottom(waitingHuman, 21);
@@ -144,8 +145,8 @@ namespace LiftModel
                 {
                     currentFloor.People.Add(human);
                     liftCanvas.Children.Remove(human);
-                    human.CameToNeededFloor();
                     currentFloor.floorCanvas.Children.Add(human);
+                    human.CameToNeededFloor(currentFloor.People);
                 }
             }
             foreach (Human human in currentFloor.People) //очистка списка лифта от тех, кто вышел
