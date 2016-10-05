@@ -25,7 +25,8 @@ namespace LiftModel
         int Floor { get; set; }
         public int Number { get; set; }
         //public Thickness InstantMargin { get; set; }
-        public int waitingNumber{ get; set; } 
+        public int waitingNumber{ get; set; }
+        private int waitNum { get; set; }
         public int FloorHumanWants { get; set; }
         private DispatcherTimer timer = new DispatcherTimer();
         private DispatcherTimer animationTimer = new DispatcherTimer();
@@ -67,12 +68,13 @@ namespace LiftModel
             label.Content = FloorHumanWants;
             return FloorHumanWants;
         }
-        public void CameToNeededFloor(List<Human> PeopleOnFloor)
+        public void CameToNeededFloor(int waitNum)
         {
             Margin = new Thickness(0, 0, 0, 0);
             human_png.Source = new BitmapImage(new Uri("E:/Programming/C#/LiftModel/LiftModel/human.png"));
             waitingNumber = 1;
-            MoveHumanToFloor(PeopleOnFloor);
+            this.waitNum = waitNum;
+            MoveHumanToFloor();
             //Margin = InstantMargin;
         }
 
@@ -93,11 +95,11 @@ namespace LiftModel
             //peopleAnim.Completed += HumanCame;
             //BeginAnimation(MarginProperty, peopleAnim);
             this.AnimKurs = -1;
-            Distanation = Math.Abs(400 - ((waitingNumber - 1) * 40) - (Number * 40))*2;
+            Distanation = 1;
             animationTimer.Start();
         }
 
-        private void MoveHumanToFloor(List<Human> PeopleOnFloor)
+        private void MoveHumanToFloor()
         {
             //ThicknessAnimation peopleAnim = new ThicknessAnimation();
             //peopleAnim.From = Margin;
@@ -106,7 +108,7 @@ namespace LiftModel
             //peopleAnim.Completed += HumanCame;
             //BeginAnimation(MarginProperty, peopleAnim);
             this.AnimKurs = 1;
-            Distanation = Math.Abs(600 - 40);
+            Distanation = 1;
             animationTimer.Start();
         }
 
@@ -124,8 +126,11 @@ namespace LiftModel
             }
             else
             {
-                Distanation -= 5;
-                Margin = new Thickness(Margin.Left + (AnimKurs * 5), 0, 0, 0);
+                Margin = new Thickness(Margin.Left + AnimKurs * 5, 15, 0, 0);
+                if (AnimKurs == 1) {
+                    if (Margin.Left >= 560 - (waitNum - 1) * 40)
+                        Distanation = 0; }
+                else if (AnimKurs == -1) { if (Margin.Left <= (waitingNumber-1) * 40) Distanation = 0; }
             }
 
         }

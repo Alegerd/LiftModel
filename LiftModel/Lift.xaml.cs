@@ -65,8 +65,8 @@ namespace LiftModel
         private void Move(Floor floor)
         {
             liftState = LiftState.isMoving; //лифт движется
-            LiftKurs = (floor.Number > FloorLiftOn.Number) ? 1 : -1;           
-            Distiantion = Math.Abs(floor.Number*100 - FloorLiftOn.Number*100);
+            LiftKurs = (floor.Number > FloorLiftOn.Number) ? 1 : -1;
+            Distiantion = Math.Abs(floor.Number * 100 - FloorLiftOn.Number * 100);
             LiftTimer.Start();
             //ThicknessAnimation liftanim = new ThicknessAnimation();
             //liftanim.From = Margin;
@@ -93,7 +93,7 @@ namespace LiftModel
             }
             else
             {
-                Distiantion-=2;
+                Distiantion -= 2;
                 Margin = new Thickness(0, Margin.Top + (LiftKurs * 2), 0, 0);
             }
 
@@ -103,10 +103,9 @@ namespace LiftModel
         {
             liftState = LiftState.isStanding;
             FloorLiftOn = currentFloor;
-            currentFloorNum = currentFloor.Number;
             if (PeopleInLift.Count != 0) GetPeopleOut();
-            TakePeopleFromCurrentFloor();
             currentFloor.LiftIsCalled = false;
+            TakePeopleFromCurrentFloor();
             ChooseFloorToMove();
         }
 
@@ -122,8 +121,9 @@ namespace LiftModel
                     currentFloor.MoveHumansInLift(waitingHuman);
                     waitingHuman.Margin = new Thickness(0, 0, 0, 0);
 
-                    Canvas.SetLeft(waitingHuman, 40 * (PeopleInLift.Count - 1));//помещаем человека в лифт
-                    Canvas.SetBottom(waitingHuman, 21);
+                    //Canvas.SetLeft(waitingHuman, 40 * (PeopleInLift.Count - 1));//помещаем человека в лифт
+                    //Canvas.SetBottom(waitingHuman, 21);
+                    waitingHuman.Margin = new Thickness(40 * (PeopleInLift.Count - 1), 15, 0, 0);
                     liftCanvas.Children.Add(waitingHuman);
                 }
             }
@@ -134,6 +134,9 @@ namespace LiftModel
 
             if (currentFloor.WaitingPeople.Count == 0)
                 CallingFloors.Remove(currentFloor);
+            else
+                currentFloor.LiftIsCalled = true;
+
         }
 
 
@@ -143,15 +146,19 @@ namespace LiftModel
             {
                 if (currentFloor.Number == human.FloorHumanWants)
                 {
-                    currentFloor.People.Add(human);
                     liftCanvas.Children.Remove(human);
                     currentFloor.floorCanvas.Children.Add(human);
-                    human.CameToNeededFloor(currentFloor.People);
+                    currentFloor.MoveHumanToFloor(human);
+
                 }
             }
-            foreach (Human human in currentFloor.People) //очистка списка лифта от тех, кто вышел
+            foreach (Human human in currentFloor.CamePeople) //очистка списка лифта от тех, кто вышел
             {
                 PeopleInLift.Remove(human);
+                foreach (Human hum in PeopleInLift)
+                {
+                    hum.Margin = new Thickness(40 * (PeopleInLift.Count - 1), 15, 0, 0);
+                }
             }
         }                             //дописать
 
@@ -167,13 +174,13 @@ namespace LiftModel
             {
                 if (PeopleInLift.Count != 0) MoveToChoosenFloors();
                 else if (CallingFloors.Count != 0)
-                {
-                    CallingFloors.Sort(delegate (Floor floor1, Floor floor2)
-                    { return floor1.Number.CompareTo(floor2.Number); });
+                    {
+                        CallingFloors.Sort(delegate (Floor floor1, Floor floor2)
+                        { return floor1.Number.CompareTo(floor2.Number); });
 
                         currentFloor = CallingFloors[0];
                         Move(currentFloor);
-                }
+                    }
             }
 
         }
