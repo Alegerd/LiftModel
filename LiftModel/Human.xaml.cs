@@ -122,7 +122,8 @@ namespace LiftModel
             if (Distanation == 0)
             {
                 animationTimer.Stop();
-                HumanCame(null, null);
+                if(AnimKurs == -1)
+                    HumanCame(null, null); 
             }
             else
             {

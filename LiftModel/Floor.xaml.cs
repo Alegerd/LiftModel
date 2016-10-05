@@ -63,6 +63,7 @@ namespace LiftModel
         {
             CamePeople.Add(human);
             human.CameToNeededFloor(CamePeople.Count);
+            human.human_png.Source = new BitmapImage(new Uri("E:/Programming/C#/LiftModel/LiftModel/greenHuman.png"));
         }
         private void CallingLift()
         {
